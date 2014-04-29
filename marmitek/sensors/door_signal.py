@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 
-from ubiGATE.ubigate.ressources.utils.logger import logger
+from ubiGATE.ubigate.utils.logger import logger
 
 
 def matches(signal):

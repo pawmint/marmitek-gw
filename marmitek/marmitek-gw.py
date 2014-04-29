@@ -2,10 +2,10 @@
 
 import sys
 
-from ubiGATE.ubigate.ressources.utils.logger import logger
-from ubiGATE.ubigate.ressources.communication.data_pusher import DataPusher
-from ubiGATE.ubigate.ressources.communication.http_thread import HttpThread
-from ubiGATE.ubigate.ressources.config import conf
+from ubiGATE.ubigate.utils.logger import logger
+from ubiGATE.ubigate.communication.data_pusher import DataPusher
+from ubiGATE.ubigate.communication.http_thread import HttpThread
+from ubiGATE.ubigate.config import conf
 
 from sensors import motion_signal, door_signal
 

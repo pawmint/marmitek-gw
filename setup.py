@@ -16,7 +16,8 @@ setup(
     author_email='clement.palliere@hotmail.fr',
     url='https://github.com/pawmint/marmitek-gw',
     packages=find_packages(),
-    include_package_data=True,
+    package_data={'': ['LICENCE'],'': ['README.md'],'': ['HISTORY.md']},
+        include_package_data=True,
     install_requires=[
         'simpy>=3.0.2',
     ],
