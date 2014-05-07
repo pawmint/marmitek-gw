@@ -39,7 +39,7 @@ logger.info('Server: %s\n'
 mqtt = mqtt_pusher.broker_connection("marmitek_sensors", "127.0.0.1")
 
 stop = 0
-topic = "my/topic"
+topic = house+"/marmitek"
 
 while stop == 0:
 
