@@ -45,3 +45,6 @@ docs/_build/
 
 # Vim tmp files
 *.swp
+
+# config file
+resources/conf.ini

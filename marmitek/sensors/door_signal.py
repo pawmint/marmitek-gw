@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 
-from ubiGATE.ubigate.utils.logger import logger
+from ubigate import logger
 
 
 def matches(signal):
@@ -11,7 +11,6 @@ def matches(signal):
     :returns: @todo
 
     """
-    # TODO refactor it with motion_signal
     # sample matching input: 11/08 14:42:15 Rx RFSEC Addr: 7E:2D:00 \r
     # Func: Contact_normal_max_tamper_DS12A
     logger.debug('Checking door for signal "%s"' % signal)
@@ -44,7 +43,7 @@ def matches(signal):
                            match.group('minute'), match.group('second')))
             return None
 
-        sensor = 'd%s%s%s' % (match.group('sensor1'), #why
+        sensor = 'd%s%s%s' % (match.group('sensor1'),
                               match.group('sensor2'),
                               match.group('sensor3'))
         # Next line is an ugly tweak, due to ugly sensor input
@@ -54,7 +53,6 @@ def matches(signal):
                     (match.group('value'), sensor, date))
 
         data = {'value': match.group('value'),
-                'sensor': sensor,
                 'date': date.strftime('%Y-%m-%d %H:%M:%S')}
-        return data
+        return sensor, data
     return None

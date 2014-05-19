@@ -1,7 +1,7 @@
 from datetime import datetime
-import re #why
+import re
 
-from ubiGATE.ubigate.utils.logger import logger
+from ubigate import logger
 
 
 def matches(signal):
@@ -25,7 +25,7 @@ def matches(signal):
     if match:
         logger.info('Motion detected:')
 
-        try: #why
+        try:
             date = datetime(datetime.now().year,
                             int(match.group('month')),
                             int(match.group('day')),
@@ -42,7 +42,6 @@ def matches(signal):
                     (match.group('value'), match.group('sensor'), date))
 
         data = {'value': match.group('value'),
-                'sensor': match.group('sensor'),
                 'date': date.strftime('%Y-%m-%d %H:%M:%S')}
-        return data
+        return match.group('sensor'), data
     return None
