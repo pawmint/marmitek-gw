@@ -23,7 +23,7 @@ def main():
                                   gate.config.username))
 
     for sensor, data in mochad_reader.run():
-        topic = "/marmitek/%s" % sensor
+        topic = "/marmitek/sensor/%s" % sensor
         gate.push(topic, data)
 
 
