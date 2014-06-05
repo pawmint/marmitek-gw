@@ -17,12 +17,14 @@ def main():
     logger.info('Server: %s\n'
                 'Port: %s\n'
                 'House: %s\n'
-                'Username: %s' % (gate.config.server,
+                'Username: %s\n'
+                'Timezone: %s' % (gate.config.server,
                                   gate.config.port,
                                   gate.config.house,
-                                  gate.config.username))
+                                  gate.config.username,
+                                  gate.config.timezone))
 
-    for sensor, data in mochad_reader.run():
+    for sensor, data in mochad_reader.run(gate.config.timezone):
         topic = "/marmitek/sensor/%s" % sensor
         gate.push(topic, data)
 

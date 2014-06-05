@@ -1,10 +1,11 @@
 from datetime import datetime
+import pytz
 import re
 
 from ubigate import logger
 
 
-def matches(signal):
+def matches(signal, timezone):
     """@todo: Docstring for matches.
 
     :signal: @todo
@@ -28,14 +29,15 @@ def matches(signal):
 
     if match:
         logger.info('Door activity detected:')
+        tz = pytz.timezone(timezone)
 
         try:
-            date = datetime(datetime.now().year,
+            date = tz.localize(datetime(datetime.now().year,
                             int(match.group('month')),
                             int(match.group('day')),
                             int(match.group('hour')),
                             int(match.group('minute')),
-                            int(match.group('second')))
+                            int(match.group('second'))))
         except ValueError:
             logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
                         % (datetime.now().year, match.group('month'),
@@ -50,9 +52,9 @@ def matches(signal):
         sensor = 'E7C300'
 
         logger.info('value: "%s", sensor: "%s", date: "%s"' %
-                    (match.group('value'), sensor, date))
+                    (match.group('value'), sensor, date.isoformat()))
 
         data = {'value': match.group('value'),
-                'date': date.strftime('%Y-%m-%d %H:%M:%S')}
+                'date': date.isoformat()}
         return sensor, data
     return None
