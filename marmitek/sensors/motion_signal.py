@@ -25,7 +25,7 @@ def matches(signal, timezone):
 
     if match:
         logger.info('Motion detected:')
-        tz = pytz.timezone(timezone)
+        tz = pytz.timezone(str(timezone))
 
         try:
             date = tz.localize(datetime(datetime.now().year,

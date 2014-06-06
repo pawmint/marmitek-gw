@@ -29,7 +29,7 @@ def matches(signal, timezone):
 
     if match:
         logger.info('Door activity detected:')
-        tz = pytz.timezone(timezone)
+        tz = pytz.timezone(str(timezone))
 
         try:
             date = tz.localize(datetime(datetime.now().year,
