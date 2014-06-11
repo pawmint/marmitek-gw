@@ -18,25 +18,25 @@ def read_from_mochad():
     return lines
 
 
-def gather_data(signal):
+def gather_data(signal, timezone):
     signal_types = [motion_signal, door_signal]
 
     data = None
 
     for checker in signal_types:
-        data = checker.matches(signal)
+        data = checker.matches(signal, timezone)
         if data is not None:
             break
     return data
 
 
-def run():
+def run(timezone):
     while True:
         lines = read_from_mochad()
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
             try:
-                sensor, data = gather_data(signal)
+                sensor, data = gather_data(signal, timezone)
                 yield sensor, data
             except TypeError:
                 pass
