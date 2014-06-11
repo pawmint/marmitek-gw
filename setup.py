@@ -20,6 +20,9 @@ setup(
     install_requires=[
         'ubigate>=0.0.2'
     ],
+    dependency_links=[
+        "git+ssh://git@github.com/RomainEndelin/ubiGATE.git@0.0.2#egg=ubiGATE-0.0.2"
+    ],
     license='Copyright',
     zip_safe=True,  # To be verified
     classifiers=[
