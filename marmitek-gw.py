@@ -26,6 +26,7 @@ def main():
 
     for sensor, data in mochad_reader.run(gate.timezone):
         topic = "/marmitek/sensor/%s" % sensor
+        topic['house'] = gate.config.house
         gate.push(topic, data)
 
 

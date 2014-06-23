@@ -29,11 +29,11 @@ def matches(signal, timezone):
 
         try:
             date = tz.localize(datetime(datetime.now().year,
-                            int(match.group('month')),
-                            int(match.group('day')),
-                            int(match.group('hour')),
-                            int(match.group('minute')),
-                            int(match.group('second'))))
+                                        int(match.group('month')),
+                                        int(match.group('day')),
+                                        int(match.group('hour')),
+                                        int(match.group('minute')),
+                                        int(match.group('second'))))
         except ValueError:
             logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
                         % (datetime.datetime.now().year, match.group('month'),
@@ -41,9 +41,13 @@ def matches(signal, timezone):
                            match.group('minute'), match.group('second')))
             return None
         logger.info('value: "%s", sensor: "%s", date: "%s"' %
-                    (match.group('value'), match.group('sensor'), date.isoformat()))
+                    (match.group('value'),
+                     match.group('sensor'), date.isoformat()))
 
-        data = {'value': match.group('value'),
+        sensor = match.group('sensor')
+
+        data = {'sensor': sensor,
+                'value': match.group('value'),
                 'date': date.isoformat()}
-        return match.group('sensor'), data
+        return sensor, data
     return None
