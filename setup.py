@@ -12,7 +12,7 @@ setup(
     version='0.1',
     description=('A gateway to use the marmitek sensors'),
     long_description=readme,
-    author='Clément Pallière',
+    author='Clement Palliere',
     author_email='clement.palliere@hotmail.fr',
     url='https://github.com/pawmint/marmitek-gw',
     packages=find_packages(),
