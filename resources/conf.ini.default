@@ -1,8 +1,8 @@
 [Ubigate]
 server = localhost
 port = 8000
-gateway = localdev
+gateway = <pokemon's name>
+password = pikachu
 house = 2
-username = clement
-timezone = Asia/Singapore
+username = <gateway>_marmitek
 

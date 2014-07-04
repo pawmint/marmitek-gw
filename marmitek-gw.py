@@ -16,10 +16,12 @@ def main():
     logger.info("Starting application")
     logger.info('Server: %s\n'
                 'Port: %s\n'
+                'Password: %s\n'
                 'House: %s\n'
                 'Username: %s\n'
                 'Timezone: %s' % (gate.config.server,
                                   gate.config.port,
+                                  gate.config.password,
                                   gate.config.house,
                                   gate.config.username,
                                   gate.timezone))
