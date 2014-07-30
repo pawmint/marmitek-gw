@@ -4,6 +4,21 @@ import re
 
 from ubigate import logger
 
+def formalize(value, sensor, date):
+    """
+    This method formalizes the data in adding meta data for the marmitek-gw program and the server interpretation.
+    """
+    meta_data = {'type' : 'event',
+                 'sensor': sensor}
+
+    logger.info("%s: The door sensor %s sent %s" % (date.isoformat(), sensor, value))
+
+
+    data = {'sensor' : sensor,
+            'value': value,
+            'date': date.isoformat()}
+
+    return meta_data, data
 
 def matches(signal, timezone):
     """@todo: Docstring for matches.
@@ -51,11 +66,5 @@ def matches(signal, timezone):
         # Next line is an ugly tweak, due to ugly sensor input
         sensor = 'E7C300'
 
-        logger.info('value: "%s", sensor: "%s", date: "%s"' %
-                    (match.group('value'), sensor, date.isoformat()))
-
-        data = {'sensor': sensor,
-                'value': match.group('value'),
-                'date': date.isoformat()}
-        return sensor, data
+        return formalize(match.group('value'), sensor, date)
     return None

@@ -11,7 +11,7 @@ from ubigate import log, logger
 def main():
     gate = Ubigate('resources/conf.ini')
     log.add_logger_file('data.log', logging.WARN)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     logger.info("Starting application")
     logger.info('Server: %s\n'
@@ -26,8 +26,10 @@ def main():
                                   gate.config.username,
                                   gate.timezone))
 
-    for sensor, data in mochad_reader.run(gate.timezone):
-        topic = "/marmitek/sensor/%s" % sensor
+    for meta_data, data in mochad_reader.run(gate.timezone):
+        if meta_data['type'] == 'error':
+            break
+        topic = "/marmitek/sensor/%s/%s" % (meta_data['sensor'], meta_data['type'])
         data['house'] = gate.config.house
         gate.push(topic, data)
 
