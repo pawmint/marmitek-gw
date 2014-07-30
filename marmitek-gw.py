@@ -18,12 +18,12 @@ def main():
                 'Port: %s\n'
                 'Password: %s\n'
                 'House: %s\n'
-                'Username: %s\n'
+                'Gateway: %s\n'
                 'Timezone: %s' % (gate.config.server,
                                   gate.config.port,
                                   gate.config.password,
                                   gate.config.house,
-                                  gate.config.username,
+                                  gate.config.gateway,
                                   gate.timezone))
 
     for meta_data, data in mochad_reader.run(gate.timezone):
