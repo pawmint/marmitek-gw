@@ -1,0 +1,23 @@
+{
+    "server": "localhost",
+    "port": 8000,
+    "gateway": "<pokemon name>_marmitek",
+    "password": "pikachu",
+    "houses": {
+        "1": {
+            "prefix": "A",
+            "sensors": [
+                "sensor1",
+                "sensor2",
+                "sensor3"
+            ]
+        },
+        "2": {
+            "prefix": "B",
+            "sensors": [
+                "sensor1",
+                "sensor2"
+            ]
+        }
+    }
+}

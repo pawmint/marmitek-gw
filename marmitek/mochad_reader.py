@@ -22,13 +22,12 @@ def gather_data(signal, timezone):
     signal_types = [motion_signal, door_signal]
 
     data = None
-    meta_data = None
 
     for checker in signal_types:
-        meta_data, data = checker.matches(signal, timezone)
+        data = checker.matches(signal, timezone)
         if data is not None:
             break
-    return meta_data, data
+    return data
 
 
 def run(timezone):
@@ -37,7 +36,7 @@ def run(timezone):
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
             try:
-                meta_data, data = gather_data(signal, timezone)
-                yield meta_data, data
+                yield gather_data(signal, timezone)
             except TypeError:
+                # FIXME When would this exception be raised?
                 pass

@@ -1,6 +1,0 @@
-[Ubigate]
-server = localhost
-port = 8000
-gateway = <pokemon's name>_marmitek
-password = pikachu
-house = 1

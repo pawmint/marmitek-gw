@@ -9,7 +9,7 @@ from ubigate import log, logger
 
 
 def main():
-    gate = Ubigate('resources/conf.ini')
+    gate = Ubigate('resources/conf.json')
     log.add_logger_file('data.log', logging.WARN)
     logger.setLevel(logging.DEBUG)
 
@@ -17,21 +17,29 @@ def main():
     logger.info('Server: %s\n'
                 'Port: %s\n'
                 'Password: %s\n'
-                'House: %s\n'
                 'Gateway: %s\n'
-                'Timezone: %s' % (gate.config.server,
-                                  gate.config.port,
-                                  gate.config.password,
-                                  gate.config.house,
-                                  gate.config.gateway,
+                'Timezone: %s' % (gate.config['server'],
+                                  gate.config['port'],
+                                  gate.config['password'],
+                                  gate.config['gateway'],
                                   gate.timezone))
 
-    for meta_data, data in mochad_reader.run(gate.timezone):
-        if meta_data['type'] == 'error':
-            break
-        topic = "/marmitek/sensor/%s/%s" % (meta_data['sensor'], meta_data['type'])
-        data['house'] = gate.config.house
-        gate.push(topic, data)
+    for data in mochad_reader.run(gate.timezone):
+        if data['type'] != 'error':
+            try:
+                data['house'] = gate.find_house(data['sensor'])
+            except KeyError:
+                logger.warning("Unknown sensor: %s" % data['sensor'])
+            else:
+                # Appending house prefix if dealing with door sensor
+                # FIXME: This is really ugly, change it ASAP
+                if len(data['sensor']) == 6:
+                    prefix = gate.config['houses'][data['house']]['prefix']
+                    data['sensor'] = prefix.lower() + data['sensor']
+
+                topic = "/marmitek/sensor/%s/%s" % (data['sensor'],
+                                                    data['type'])
+                gate.push(data['house'], topic, data)
 
 
 if __name__ == "__main__":
