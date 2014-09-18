@@ -37,8 +37,9 @@ def main():
                     prefix = gate.config['houses'][data['house']]['prefix']
                     data['sensor'] = prefix.lower() + data['sensor']
 
-                topic = "/marmitek/sensor/%s/%s" % (data['sensor'],
-                                                    data['type'])
+                topic = "/marmitek/sensor/%s" % data['sensor']
+                # topic = "/marmitek/sensor/%s/%s" % (data['sensor'],
+                #                                     data['type'])
                 gate.push(data['house'], topic, data)
 
 
