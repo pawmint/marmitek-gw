@@ -23,6 +23,9 @@ setup(
     dependency_links=[
         "git+ssh://git@github.com/RomainEndelin/ubiGATE.git@v0.0.3-alpha#egg=UbiGate-0.0.3-alpha"
     ],
+    entry_points = {
+        'console_scripts': ['marmitek-gw=marmitek.gateway:main'],
+    },
     license='Copyright',
     zip_safe=True,  # To be verified
     classifiers=[
