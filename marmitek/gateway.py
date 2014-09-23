@@ -14,15 +14,15 @@ def main():
     logger.setLevel(logging.DEBUG)
 
     logger.info("Starting application")
-    logger.info('Server: %s\n'
-                'Port: %s\n'
-                'Password: %s\n'
-                'Gateway: %s\n'
-                'Timezone: %s' % (gate.config['server'],
-                                  gate.config['port'],
-                                  gate.config['password'],
-                                  gate.config['gateway'],
-                                  gate.timezone))
+    logger.info('Timezone: %s' % gate.timezone)
+    for gateway in gate.config['gateways']:
+        logger.info('Server: %s\n'
+                    'Port: %s\n'
+                    'Password: %s\n'
+                    'Gateway: %s\n' % (gateway['server'],
+                                       gateway['port'],
+                                       gateway['password'],
+                                       gateway['name']))
 
     for data in mochad_reader.run(gate.timezone):
         if data['type'] != 'error':

@@ -1,8 +1,12 @@
 {
-    "server": "localhost",
-    "port": 8000,
-    "gateway": "<pokemon name>_marmitek",
-    "password": "pikachu",
+    "gateways": [
+        {
+            "name": "<pokemon_name>_marmitek",
+            "password": "pikachu",
+            "server": "localhost",
+            "port": 8000
+        }
+    ],
     "houses": {
         "1": {
             "prefix": "A",
