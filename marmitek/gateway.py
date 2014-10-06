@@ -32,8 +32,7 @@ def main():
                 logger.warning("Unknown sensor: %s" % data['sensor'])
             else:
                 # Appending house prefix if dealing with door sensor
-                # FIXME: This is really ugly, change it ASAP
-                if len(data['sensor']) == 6:
+                if data['sensorKind'] == 'door':
                     prefix = gate.config['houses'][data['house']]['prefix']
                     data['sensor'] = prefix.lower() + data['sensor']
 

@@ -47,6 +47,7 @@ def matches(signal, timezone):
 
         return {'type': 'event',
                 'sensor': match.group('sensor'),
+                'sensorKind': 'motion',
                 'value': match.group('value'),
                 'date': date.isoformat()}
     return None
