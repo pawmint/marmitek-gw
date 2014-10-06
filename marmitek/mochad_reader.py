@@ -31,12 +31,17 @@ def gather_data(signal, timezone):
 
 
 def run(timezone):
+    lastDoorEvents = {}
     while True:
         lines = read_from_mochad()
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
             try:
-                yield gather_data(signal, timezone)
+                data = gather_data(signal, timezone)
+                if(data['sensorKind'] != 'door' or
+                   lastDoorEvents.get(data['sensor'], "") != data['value']):
+                    lastDoorEvents[data['sensor']] = data['value']
+                    yield data
             except TypeError:
                 # FIXME When would this exception be raised?
                 pass
