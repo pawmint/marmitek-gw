@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 
-import logging
-
 from marmitek import mochad_reader
 
 from ubigate import Ubigate
-from ubigate import log, logger
+from ubigate import logger
 
 
 def main():
     gate = Ubigate('marmitek-gw',
                    default_file='resources/conf.json.default')
-    log.add_logger_file('data.log', logging.WARN)
-    logger.setLevel(logging.DEBUG)
 
     logger.info("Starting application")
     logger.info('Timezone: %s' % gate.timezone)
@@ -36,8 +32,6 @@ def main():
                     data['sensor'] = prefix.lower() + data['sensor']
 
                 topic = "/marmitek/sensor/%s" % data['sensor']
-                # topic = "/marmitek/sensor/%s/%s" % (data['sensor'],
-                #                                     data['type'])
                 gate.push(data['house'], topic, data)
 
 

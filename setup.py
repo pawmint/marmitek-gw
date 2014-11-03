@@ -17,10 +17,10 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'UbiGate>=0.1'
+        'UbiGate>=0.1.1'
     ],
     dependency_links=[
-        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.1#egg=UbiGate-0.1"
+        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.1.1#egg=UbiGate-0.1.1"
     ],
     entry_points = {
         'console_scripts': ['marmitek-gw=marmitek.gateway:main'],
