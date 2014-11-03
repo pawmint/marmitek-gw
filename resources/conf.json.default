@@ -1,27 +1,20 @@
 {
-    "gateways": [
-        {
-            "name": "<pokemon_name>_marmitek",
-            "password": "pikachu",
-            "server": "localhost",
-            "port": 8000
-        }
-    ],
-    "houses": {
-        "1": {
-            "prefix": "A",
-            "sensors": [
-                "sensor1",
-                "sensor2",
-                "sensor3"
-            ]
-        },
-        "2": {
-            "prefix": "B",
-            "sensors": [
-                "sensor1",
-                "sensor2"
-            ]
-        }
+  "gateways": [
+    {
+      "name": "<GW-Name>",
+      "server": "localhost",
+      "port": 8000
     }
+  ],
+  "houses": {
+    "house1": {
+      "id": "<ID>",
+      "password": "<PWD>",
+      "prefix": "<housePrefix>",
+      "sensors": [
+        "<Sensor1Code>",
+        "<Sensor2Code>"
+      ]
+    }
+  }
 }

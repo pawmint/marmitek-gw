@@ -5,23 +5,22 @@ from setuptools import setup, find_packages
 
 
 readme = open('README.md').read()
-# history = open('HISTORY.rm').read()
 
 setup(
     name='Marmitek-Gw',
     version='0.2-beta',
     description=('A gateway to use the marmitek sensors'),
     long_description=readme,
-    author='Clément Pallière',
-    author_email='clement.palliere@hotmail.fr',
+    author='Clément Pallière, Romain Endelin',
+    author_email='romain.endelin@mines-telecom.fr',
     url='https://github.com/pawmint/marmitek-gw',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'UbiGate>=0.0.3-alpha'
+        'UbiGate>=0.1'
     ],
     dependency_links=[
-        "git+ssh://git@github.com/RomainEndelin/ubiGATE.git@v0.0.4-alpha#egg=UbiGate-0.0.4-alpha"
+        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.1#egg=UbiGate-0.1"
     ],
     entry_points = {
         'console_scripts': ['marmitek-gw=marmitek.gateway:main'],

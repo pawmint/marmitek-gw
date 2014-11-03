@@ -3,19 +3,24 @@ from ubigate import logger
 
 from marmitek.sensors import motion_signal, door_signal
 
-# TODO Put the config in the config file
-MOCHADHOST = "127.0.0.1"
-MOCHADPORT = 1099
 
-Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-Sock.connect((MOCHADHOST, MOCHADPORT))
+def _init():
+    # TODO Put the config in the config file
+    MOCHADHOST = "127.0.0.1"
+    MOCHADPORT = 1099
+
+    Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    Sock.connect((MOCHADHOST, MOCHADPORT))
+    return Sock
 
 
 def read_from_mochad():
-    data = Sock.recv(1024)
-    line = repr(data).strip("b'")
-    lines = line.split('\\n')
-    return lines
+    Sock = _init()
+    while True:
+        data = Sock.recv(1024)
+        line = repr(data).strip("b'")
+        lines = line.split('\\n')
+        yield lines
 
 
 def gather_data(signal, timezone):
