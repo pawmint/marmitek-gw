@@ -8,7 +8,7 @@ readme = open('README.md').read()
 
 setup(
     name='Marmitek-Gw',
-    version='0.3',
+    version='1.0',
     description=('A gateway to use the marmitek sensors'),
     long_description=readme,
     author='Clément Pallière, Romain Endelin',
