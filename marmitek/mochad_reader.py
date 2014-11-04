@@ -1,4 +1,6 @@
 import socket
+import sys
+
 from ubigate import logger
 
 from marmitek.sensors import motion_signal, door_signal
@@ -9,8 +11,12 @@ def _init():
     MOCHADHOST = "127.0.0.1"
     MOCHADPORT = 1099
 
-    Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    Sock.connect((MOCHADHOST, MOCHADPORT))
+    try:
+        Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Sock.connect((MOCHADHOST, MOCHADPORT))
+    except socket.error as e:
+        logger.error(e)
+        sys.exit(1)
     return Sock
 
 
