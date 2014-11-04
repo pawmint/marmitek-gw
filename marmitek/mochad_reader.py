@@ -26,27 +26,22 @@ def read_from_mochad():
 def gather_data(signal, timezone):
     signal_types = [motion_signal, door_signal]
 
-    data = None
-
     for checker in signal_types:
         data = checker.matches(signal, timezone)
         if data is not None:
-            break
-    return data
+            return data
+    return None
 
 
 def run(timezone):
     lastDoorEvents = {}
-    while True:
-        lines = read_from_mochad()
+    for lines in read_from_mochad():
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
-            try:
-                data = gather_data(signal, timezone)
-                if(data['sensorKind'] != 'door' or
-                   lastDoorEvents.get(data['sensor'], "") != data['value']):
-                    lastDoorEvents[data['sensor']] = data['value']
-                    yield data
-            except TypeError:
-                # FIXME When would this exception be raised?
-                pass
+            data = gather_data(signal, timezone)
+            if data is None:
+                continue
+            if(data['sensorKind'] != 'door' or
+               lastDoorEvents.get(data['sensor'], "") != data['value']):
+                lastDoorEvents[data['sensor']] = data['value']
+                yield data

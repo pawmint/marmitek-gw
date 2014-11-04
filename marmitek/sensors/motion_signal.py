@@ -6,12 +6,6 @@ from ubigate import logger
 
 
 def matches(signal, timezone):
-    """@todo: Docstring for matches.
-
-    :signal: @todo
-    :returns: @todo
-
-    """
     # sample matching input: 01/01 00:14:31 Rx RF HouseUnit: A1 Func: On
     logger.debug('Checking motion for signal "%s"' % signal)
 
@@ -23,31 +17,32 @@ def matches(signal, timezone):
 
     match = regexp.match(signal)
 
-    if match:
-        logger.info('Motion detected:')
-        tz = pytz.timezone(str(timezone))
+    if not match:
+        return None
 
-        try:
-            date = tz.localize(datetime(datetime.now().year,
-                                        int(match.group('month')),
-                                        int(match.group('day')),
-                                        int(match.group('hour')),
-                                        int(match.group('minute')),
-                                        int(match.group('second'))))
-        except ValueError:
-            logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
-                        % (datetime.datetime.now().year, match.group('month'),
-                           match.group('day'), match.group('hour'),
-                           match.group('minute'), match.group('second')))
-            return None
+    logger.info('Motion detected:')
+    tz = pytz.timezone(str(timezone))
 
-        logger.info("%s: The motion sensor %s sent %s"
-                    % (date.isoformat(), match.group('sensor'),
-                       match.group('value')))
+    try:
+        date = tz.localize(datetime(datetime.now().year,
+                                    int(match.group('month')),
+                                    int(match.group('day')),
+                                    int(match.group('hour')),
+                                    int(match.group('minute')),
+                                    int(match.group('second'))))
+    except ValueError:
+        logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
+                    % (datetime.datetime.now().year, match.group('month'),
+                        match.group('day'), match.group('hour'),
+                        match.group('minute'), match.group('second')))
+        return None
 
-        return {'type': 'event',
-                'sensor': match.group('sensor'),
-                'sensorKind': 'motion',
-                'value': match.group('value'),
-                'date': date.isoformat()}
-    return None
+    logger.info("%s: The motion sensor %s sent %s"
+                % (date.isoformat(), match.group('sensor'),
+                    match.group('value')))
+
+    return {'type': 'event',
+            'sensor': match.group('sensor'),
+            'sensorKind': 'motion',
+            'value': match.group('value'),
+            'date': date.isoformat()}
