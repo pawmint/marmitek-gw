@@ -3,7 +3,7 @@
     {
       "name": "<GW-Name>",
       "server": "localhost",
-      "port": 8000
+      "port": 1883
     }
   ],
   "houses": {
