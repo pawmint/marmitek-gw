@@ -6,9 +6,10 @@
       "port": 1883
     }
   ],
-  "houses": {
-    "house1": {
-      "id": "<ID>",
+  "houses": [
+    {
+      "name": "<NAME>",
+      "username": "<USER>",
       "password": "<PWD>",
       "prefix": "<housePrefix>",
       "sensors": [
@@ -16,7 +17,7 @@
         "<Sensor2Code>"
       ]
     }
-  },
+  ],
   "logging": {
     "file": "info",
     "stdout": "debug"
