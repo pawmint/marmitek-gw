@@ -21,7 +21,12 @@ def main():
             else:
                 # Appending house prefix if dealing with door sensor
                 if data['sensorKind'] == 'door':
-                    prefix = gate.config['houses'][data['house']]['prefix']
+                    for house in gate.config['houses']:
+                        if house['name'] == data['house']:
+                            prefix = house['prefix']
+                            break
+                    else:
+                        prefix = ''
                     data['sensor'] = prefix.lower() + data['sensor']
 
                 topic = "/marmitek/sensor/%s" % data['sensor']
