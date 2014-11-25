@@ -3,14 +3,15 @@
     {
       "name": "<GW-Name>",
       "server": "localhost",
-      "port": 1883
+      "port": 1883,
+      "username": "<USER>",
+      "password": "<PWD>",
     }
   ],
   "houses": [
     {
+      "id": "<ID>",
       "name": "<NAME>",
-      "username": "<USER>",
-      "password": "<PWD>",
       "prefix": "<housePrefix>",
       "sensors": [
         "<Sensor1Code>",

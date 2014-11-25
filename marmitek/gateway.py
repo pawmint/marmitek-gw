@@ -22,7 +22,7 @@ def main():
                 # Appending house prefix if dealing with door sensor
                 if data['sensorKind'] == 'door':
                     for house in gate.config['houses']:
-                        if house['name'] == data['house']:
+                        if house['id'] == data['house']:
                             prefix = house['prefix']
                             break
                     else:
