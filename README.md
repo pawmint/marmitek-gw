@@ -38,7 +38,7 @@ Here is a template `conf.json`:
       "sensors": [
         "A1",
         "A2",
-        "FAF300",
+        "FAF300"
       ]
     }
   ],
