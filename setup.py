@@ -20,7 +20,7 @@ setup(
         'UbiGate>=0.2.0'
     ],
     dependency_links=[
-        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.2.0-alpha#egg=UbiGate-0.2.0-alpha"
+        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.2.0#egg=UbiGate-0.2.0"
     ],
     entry_points = {
         'console_scripts': ['marmitek-gw=marmitek.gateway:main'],
