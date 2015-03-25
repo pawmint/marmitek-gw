@@ -1,5 +1,6 @@
 import socket
-import sys
+import select
+import time
 
 from ubigate import logger
 
@@ -11,22 +12,32 @@ def _init():
     MOCHADHOST = "127.0.0.1"
     MOCHADPORT = 1099
 
-    try:
-        Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Sock.connect((MOCHADHOST, MOCHADPORT))
-    except socket.error as e:
-        logger.error(e)
-        sys.exit(1)
-    return Sock
+    while True:
+        try:
+            Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            Sock.connect((MOCHADHOST, MOCHADPORT))
+            Sock.settimeout(10)
+            logger.debug("Successfully connected to Mochad")
+            return Sock
+        except socket.error as e:
+            Sock.close()
+            logger.error("Unable to listen from Mochad : %s" % e)
+            time.sleep(5)
 
 
 def read_from_mochad():
-    Sock = _init()
     while True:
-        data = Sock.recv(1024)
-        line = repr(data).strip("b'")
-        lines = line.split('\\n')
-        yield lines
+        Sock = _init()
+        try:
+            data = Sock.recv(1024)
+            line = repr(data).strip("b'")
+            lines = line.split('\\n')
+            yield lines
+        except socket.timeout:
+            logger.warning("Will try to reconnect to mochad")
+        finally:
+            Sock.shutdown(2)
+            Sock.close()
 
 
 def gather_data(signal, timezone):
