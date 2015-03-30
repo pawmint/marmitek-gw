@@ -21,15 +21,18 @@ def matches(signal, timezone):
         return None
 
     logger.info('Motion detected:')
+    # TODO Isn't this line useless ????
     tz = pytz.timezone(str(timezone))
 
     try:
+        # FIXME the millisecond at the end may not be useful
         date = tz.localize(datetime(datetime.now().year,
                                     int(match.group('month')),
                                     int(match.group('day')),
                                     int(match.group('hour')),
                                     int(match.group('minute')),
-                                    int(match.group('second'))))
+                                    int(match.group('second')),
+                                    200000))
     except ValueError:
         logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
                     % (datetime.datetime.now().year, match.group('month'),
