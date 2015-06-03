@@ -58,7 +58,9 @@ def run(timezone):
             data = gather_data(signal, timezone)
             if data is None:
                 continue
-            if(data['sensorKind'] != 'door' or
-               lastDoorEvents.get(data['sensor'], "") != data['value']):
-                lastDoorEvents[data['sensor']] = data['value']
+            sensor = data['sensor']
+            if not(data['sensorKind'] == 'door'
+                   and lastDoorEvents.get(sensor, "") == data['value']):
+                if data['sensorKind'] == 'door':
+                    lastDoorEvents[sensor] = data['value']
                 yield data
