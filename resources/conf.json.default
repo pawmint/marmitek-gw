@@ -5,7 +5,7 @@
       "server": "localhost",
       "port": 1883,
       "username": "<USER>",
-      "password": "<PWD>",
+      "password": "<PWD>"
     }
   ],
   "houses": [
