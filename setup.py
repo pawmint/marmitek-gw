@@ -8,7 +8,7 @@ readme = open('README.md').read()
 
 setup(
     name='Marmitek-Gw',
-    version='1.2.2',
+    version='1.2.3',
     description=('A gateway to use the marmitek sensors'),
     long_description=readme,
     author='Clément Pallière, Romain Endelin',
@@ -20,7 +20,7 @@ setup(
         'UbiGate>=0.2.0'
     ],
     dependency_links=[
-        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.2.1#egg=UbiGate-0.2.1"
+        "git+ssh://git@github.com/pawmint/ubiGATE.git@v0.2.2#egg=UbiGate-0.2.2"
     ],
     entry_points = {
         'console_scripts': ['marmitek-gw=marmitek.gateway:main'],

@@ -27,18 +27,21 @@ def _init():
 
 
 def read_from_mochad():
+    Sock = _init()
     while True:
-        Sock = _init()
+        lines = None
         try:
             data = Sock.recv(1024)
             line = repr(data).strip("b'")
             lines = line.split('\\n')
-            yield lines
         except socket.timeout:
             logger.warning("Will try to reconnect to mochad")
         finally:
             Sock.shutdown(2)
             Sock.close()
+            Sock = _init()
+            if lines is not None:
+                yield lines
 
 
 def gather_data(signal, timezone):
