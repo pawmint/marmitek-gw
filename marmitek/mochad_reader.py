@@ -1,10 +1,9 @@
+# -*- coding: utf-8 -*-
 import socket
-import select
 import time
 
-from ubigate import logger
-
-from marmitek.sensors import motion_signal, door_signal
+from sensors import motion_signal, door_signal
+from ubigate.log import logger
 
 
 def _init():
@@ -26,18 +25,21 @@ def _init():
 
 
 def read_from_mochad():
+    Sock = _init()
     while True:
-        Sock = _init()
+        lines = None
         try:
             data = Sock.recv(1024)
             line = repr(data).strip("b'")
             lines = line.split('\\n')
-            yield lines
         except socket.timeout:
             logger.warning("Will try to reconnect to mochad")
         finally:
             Sock.shutdown(2)
             Sock.close()
+            Sock = _init()
+            if lines is not None:
+                yield lines
 
 
 def gather_data(signal, timezone):
@@ -58,7 +60,9 @@ def run(timezone):
             data = gather_data(signal, timezone)
             if data is None:
                 continue
-            if(data['sensorKind'] != 'door' or
-               lastDoorEvents.get(data['sensor'], "") != data['value']):
-                lastDoorEvents[data['sensor']] = data['value']
+            sensor = data['sensor']
+            if not(data['sensorKind'] == 'door'
+                   and lastDoorEvents.get(sensor, "") == data['value']):
+                if data['sensorKind'] == 'door':
+                    lastDoorEvents[sensor] = data['value']
                 yield data

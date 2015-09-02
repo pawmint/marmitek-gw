@@ -1,0 +1,9 @@
+[Core]
+Name = Marmitek
+Module = marmitek
+
+[Documentation]
+Author = PAWMint
+Version = 2.0.0
+Website = https://github.com/pawmint/marmitek-gw
+Description = Gateway with X10 sensors

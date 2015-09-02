@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 import pytz
 import re
 
-from ubigate import logger
+from ubigate.log import logger
 
 
 def matches(signal, timezone):
@@ -47,5 +48,5 @@ def matches(signal, timezone):
     return {'type': 'event',
             'sensor': match.group('sensor'),
             'sensorKind': 'motion',
-            'value': match.group('value'),
+            'value': match.group('value').lower(),
             'date': date.isoformat()}
