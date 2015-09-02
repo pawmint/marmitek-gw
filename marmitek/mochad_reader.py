@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import socket
-import select
 import time
 
-from ubigate import logger
-
-from marmitek.sensors import motion_signal, door_signal
+from sensors import motion_signal, door_signal
+from ubigate.log import logger
 
 
 def _init():

@@ -1,0 +1,9 @@
+[Core]
+Name = Marmitek
+Module = marmitek
+
+[Documentation]
+Author = PAWMint
+Version = 0.1
+Website = https://github.com/pawmint/marmitek-gw/
+Description = Handles X10 signals

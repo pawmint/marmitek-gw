@@ -3,7 +3,7 @@ from datetime import datetime
 import pytz
 import re
 
-from ubigate import logger
+from ubigate.log import logger
 
 
 def matches(signal, timezone):
