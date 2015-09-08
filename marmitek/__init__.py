@@ -1,4 +1,4 @@
-from ubigate.plugin_categories import SensorPlugin
+from ubigate.plugin_categories.sensor_plugin import SensorPlugin
 
 from marmitek import mochad_reader
 
