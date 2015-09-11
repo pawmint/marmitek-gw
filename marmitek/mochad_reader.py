@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import socket
 import time
+from tzlocal import get_localzone
+import pytz
 
 from sensors import motion_signal, door_signal
 from ubigate.log import logger
@@ -33,7 +35,7 @@ def read_from_mochad():
             line = repr(data).strip("b'")
             lines = line.split('\\n')
         except socket.timeout:
-            logger.warning("Will try to reconnect to mochad")
+            logger.debug("Disconnected from mochad")
         finally:
             Sock.shutdown(2)
             Sock.close()
@@ -42,24 +44,27 @@ def read_from_mochad():
                 yield lines
 
 
-def gather_data(signal, timezone):
+def gather_data(signal):
     signal_types = [motion_signal, door_signal]
 
     for checker in signal_types:
-        data = checker.matches(signal, timezone)
+        data = checker.matches(signal)
         if data is not None:
             return data
     return None
 
 
-def run(timezone):
+def run():
+    tz = pytz.timezone(str(get_localzone()))
     lastDoorEvents = {}
+
     for lines in read_from_mochad():
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
-            data = gather_data(signal, timezone)
+            data = gather_data(signal)
             if data is None:
                 continue
+            data['date'] = tz.localize(data['date']).isoformat()
             sensor = data['sensor']
             if not(data['sensorKind'] == 'door'
                    and lastDoorEvents.get(sensor, "") == data['value']):

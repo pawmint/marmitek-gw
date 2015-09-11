@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import pytz
 import re
 
 from ubigate.log import logger
 
 
-def matches(signal, timezone):
+def matches(signal):
     # sample matching input: 11/08 14:42:15 Rx RFSEC Addr: 7E:2D:00 \r
     # Func: Contact_normal_max_tamper_DS12A
     logger.debug('Checking door for signal "%s"' % signal)
@@ -26,15 +25,14 @@ def matches(signal, timezone):
         return None
 
     logger.info('Door activity detected:')
-    tz = pytz.timezone(str(timezone))
 
     try:
-        date = tz.localize(datetime(datetime.now().year,
-                                    int(match.group('month')),
-                                    int(match.group('day')),
-                                    int(match.group('hour')),
-                                    int(match.group('minute')),
-                                    int(match.group('second'))))
+        date = datetime(datetime.now().year,
+                        int(match.group('month')),
+                        int(match.group('day')),
+                        int(match.group('hour')),
+                        int(match.group('minute')),
+                        int(match.group('second')))
     except ValueError:
         logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
                     % (datetime.now().year, match.group('month'),
@@ -54,4 +52,4 @@ def matches(signal, timezone):
             'sensor': sensor,
             'sensorKind': 'door',
             'value': match.group('value'),
-            'date': date.isoformat()}
+            'date': date}

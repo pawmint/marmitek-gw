@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import pytz
 import re
 
 from ubigate.log import logger
 
 
-def matches(signal, timezone):
+def matches(signal):
     # sample matching input: 01/01 00:14:31 Rx RF HouseUnit: A1 Func: On
     logger.debug('Checking motion for signal "%s"' % signal)
 
@@ -22,18 +21,16 @@ def matches(signal, timezone):
         return None
 
     logger.info('Motion detected:')
-    # TODO Isn't this line useless ????
-    tz = pytz.timezone(str(timezone))
 
     try:
         # FIXME the millisecond at the end may not be useful
-        date = tz.localize(datetime(datetime.now().year,
-                                    int(match.group('month')),
-                                    int(match.group('day')),
-                                    int(match.group('hour')),
-                                    int(match.group('minute')),
-                                    int(match.group('second')),
-                                    200000))
+        date = datetime(datetime.now().year,
+                        int(match.group('month')),
+                        int(match.group('day')),
+                        int(match.group('hour')),
+                        int(match.group('minute')),
+                        int(match.group('second')),
+                        200000)
     except ValueError:
         logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
                     % (datetime.datetime.now().year, match.group('month'),
@@ -49,4 +46,4 @@ def matches(signal, timezone):
             'sensor': match.group('sensor'),
             'sensorKind': 'motion',
             'value': match.group('value').lower(),
-            'date': date.isoformat()}
+            'date': date}
