@@ -1,6 +1,6 @@
 from ubigate.plugin_categories.sensor_plugin import SensorPlugin
 
-from marmitek import mochad_reader
+import mochad_reader
 
 from ubigate.log import logger
 
