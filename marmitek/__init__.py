@@ -13,4 +13,4 @@ class Marmitek(SensorPlugin):
         logger.info("Starting Marmitek-Gateway")
 
         for data in mochad_reader.run():
-            self.push_event(data['sensor'], data['value'], data['date'])
+	    self.push_event(data['sensor'], data['value'], data['date'], data['id'], data['type'], data['observedProperty'], data['procedure'], data['featureOfInterest'], data['uom'])

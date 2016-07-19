@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from xml.dom import minidom
+import glob
 import socket
 import time
 from tzlocal import get_localzone
@@ -55,15 +57,39 @@ def gather_data(signal):
 
 
 def run():
+    myMAC = open('/sys/class/net/eth0/address').read()
     tz = pytz.timezone(str(get_localzone()))
-    lastDoorEvents = {}
-
+    lastDoorEvents = {}     
     for lines in read_from_mochad():
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
             data = gather_data(signal)
-            if data is None:
+	    if data is None:
                 continue
+	    file = ''.join(glob.glob('home/pi/*'+data['sensor']+'*.xml')) 
+	    if file is '':
+		data['id']= 'ID'
+		data['observedProperty']= "http"
+    	        data['procedure']= "http"
+    	        data['featureOfInterest']= "http"
+    	        data['type']= 'TYPE'
+    	        data['uom']= "http"
+		logger.debug ('unregistered sensor')
+	    else:
+	        xmldoc = minidom.parse(file)
+	        itemlist = xmldoc.getElementsByTagName('gml:identifier')
+	        data['procedure']= itemlist[0].firstChild.nodeValue
+	        itemlist = xmldoc.getElementsByTagName('sml:feature')
+	        data['featureOfInterest']= itemlist[0].attributes['xlink:title'].value
+	        itemlist = xmldoc.getElementsByTagName('sml:ObservableProperty')
+	        data['observedProperty']= itemlist[0].attributes['definition'].value
+	        itemlist = xmldoc.getElementsByTagName('sml:ObservationType')
+	        data['type']= itemlist[0].attributes['name'].value
+	        itemlist = xmldoc.getElementsByTagName('swe:uom')
+	        data['uom']= itemlist[0].firstChild.nodeValue
+	        data['id'] = ''.join (['Raspberry_Pi','/',myMAC.rstrip(),'/',data['procedure'],'/',data['date'].isoformat()])
+	    logger.debug("data format  is: %r" % data)
+            
             data['date'] = tz.localize(data['date']).isoformat()
             sensor = data['sensor']
             if not(data['sensorKind'] == 'door'
@@ -71,3 +97,4 @@ def run():
                 if data['sensorKind'] == 'door':
                     lastDoorEvents[sensor] = data['value']
                 yield data
+
