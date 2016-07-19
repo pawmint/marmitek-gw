@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from xml.dom import minidom
+import glob
 import socket
-import select
 import time
-
-from ubigate import logger
-
-from marmitek.sensors import motion_signal, door_signal
-
+from tzlocal import get_localzone
+import pytz
+from sensors import motion_signal, door_signal
+from ubigate.log import logger
 
 def _init():
     # TODO Put the config in the config file
@@ -35,7 +35,7 @@ def read_from_mochad():
             line = repr(data).strip("b'")
             lines = line.split('\\n')
         except socket.timeout:
-            logger.warning("Will try to reconnect to mochad")
+            logger.debug("Disconnected from mochad")
         finally:
             Sock.shutdown(2)
             Sock.close()
@@ -44,27 +44,54 @@ def read_from_mochad():
                 yield lines
 
 
-def gather_data(signal, timezone):
+def gather_data(signal):
     signal_types = [motion_signal, door_signal]
 
     for checker in signal_types:
-        data = checker.matches(signal, timezone)
+        data = checker.matches(signal)
         if data is not None:
             return data
     return None
 
-
-def run(timezone):
-    lastDoorEvents = {}
+def run():
+    myMAC = open('/sys/class/net/eth0/address').read()
+    tz = pytz.timezone(str(get_localzone()))
+    lastDoorEvents = {}     
     for lines in read_from_mochad():
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
-            data = gather_data(signal, timezone)
-            if data is None:
+            data = gather_data(signal)
+	    if data is None:
                 continue
+	    file = ''.join(glob.glob('home/pi/*'+data['sensor']+'*.xml')) 
+	    if file is '':
+		data['id']= 'ID'
+		data['observedProperty']= "http"
+    	        data['procedure']= "http"
+    	        data['featureOfInterest']= "http"
+    	        data['type']= 'TYPE'
+    	        data['uom']= "http"
+		logger.debug ('unregistered sensor')
+	    else:
+	        xmldoc = minidom.parse(file)
+	        itemlist = xmldoc.getElementsByTagName('gml:identifier')
+	        data['procedure']= itemlist[0].firstChild.nodeValue
+	        itemlist = xmldoc.getElementsByTagName('sml:feature')
+	        data['featureOfInterest']= itemlist[0].attributes['xlink:title'].value
+	        itemlist = xmldoc.getElementsByTagName('sml:ObservableProperty')
+	        data['observedProperty']= itemlist[0].attributes['definition'].value
+	        itemlist = xmldoc.getElementsByTagName('sml:ObservationType')
+	        data['type']= itemlist[0].attributes['name'].value
+	        itemlist = xmldoc.getElementsByTagName('swe:uom')
+	        data['uom']= itemlist[0].firstChild.nodeValue
+	        data['id'] = ''.join (['Raspberry_Pi','/',myMAC.rstrip(),'/',data['procedure'],'/',data['date'].isoformat()])
+	    logger.debug("data format  is: %r" % data)
+            
+            data['date'] = tz.localize(data['date']).isoformat()
             sensor = data['sensor']
             if not(data['sensorKind'] == 'door'
                    and lastDoorEvents.get(sensor, "") == data['value']):
                 if data['sensorKind'] == 'door':
                     lastDoorEvents[sensor] = data['value']
                 yield data
+
