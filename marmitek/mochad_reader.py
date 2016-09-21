@@ -66,7 +66,7 @@ def run():
             data = gather_data(signal)
 	    if data is None:
                 continue
-	    file = ''.join(glob.glob('home/pi/*'+data['sensor']+'*.xml'))
+	    file = ''.join(glob.glob('/home/pi/*'+data['sensor']+'*.xml'))
 	    if file is '':
 		data['id']= 'ID'
 		data['observedProperty']= "http"
