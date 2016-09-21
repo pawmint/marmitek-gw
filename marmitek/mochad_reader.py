@@ -59,15 +59,17 @@ def gather_data(signal):
 def run():
     myMAC = open('/sys/class/net/eth0/address').read()
     tz = pytz.timezone(str(get_localzone()))
-    lastDoorEvents = {}     
+    lastDoorEvents = {}
     for lines in read_from_mochad():
         for signal in lines[:-1]:
             logger.debug('Signal received: %s' % signal)
             data = gather_data(signal)
 	    if data is None:
                 continue
-	    file = ''.join(glob.glob('home/pi/*'+data['sensor']+'*.xml')) 
+	    file = ''.join(glob.glob('home/pi/*'+data['sensor']+'*.xml'))
+        logger.debug('file: %s' % file)
 	    if file is '':
+        logger.debug('file empty')
 		data['id']= 'ID'
 		data['observedProperty']= "http"
     	        data['procedure']= "http"
@@ -89,7 +91,7 @@ def run():
 	        data['uom']= itemlist[0].firstChild.nodeValue
 	        data['id'] = ''.join (['Raspberry_Pi','/',myMAC.rstrip(),'/',data['procedure'],'/',data['date'].isoformat()])
 	    logger.debug("data format  is: %r" % data)
-            
+
             data['date'] = tz.localize(data['date']).isoformat()
             sensor = data['sensor']
             if not(data['sensorKind'] == 'door'
