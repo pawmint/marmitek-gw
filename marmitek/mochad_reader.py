@@ -67,7 +67,6 @@ def run():
 	    if data is None:
                 continue
 	    file = ''.join(glob.glob('home/pi/*'+data['sensor']+'*.xml'))
-        logger.debug('file: %s' % file)
 	    if file is '':
 		data['id']= 'ID'
 		data['observedProperty']= "http"
