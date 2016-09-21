@@ -30,7 +30,7 @@ def matches(signal):
                         int(match.group('hour')),
                         int(match.group('minute')),
                         int(match.group('second')),
-                        200000)
+                        000)
     except ValueError:
         logger.warn('Invalid date: %s-%s-%s %s:%s:%s, event skipped'
                     % (datetime.datetime.now().year, match.group('month'),
