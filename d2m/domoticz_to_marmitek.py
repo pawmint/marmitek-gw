@@ -78,7 +78,7 @@ def on_message(client, userdata, msg):
             result['type']= "TruthObservation"
             result['observedProperty']= data['switchType'] # Contact or Motion
             result['procedure']= "Zwave_%s_%s_%s" % (sensor, details['binding'], details['bindingType'])
-            result['featureOfInterest']= {'href': details['house']}
+            result['featureOfInterest']= details['house']
             result['uom'] = '' # unit of measurement
             #result['id']= "Raspberry_Pi/%s/Zwave_%s_Room" % (client.ubigate.credentials['id'],sensor)
             result['id'] = '/'.join (['Raspberry_Pi', myMAC, result['procedure'], date])
