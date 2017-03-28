@@ -1,0 +1,9 @@
+[Core]
+Name = Domoticz_to_Marmitek
+Module = d2m
+
+[Documentation]
+Author = PAWMint
+Version = 0.1
+Website = https://github.com/pawmint/ubigate
+Description = Transform domoticz to marmitek format

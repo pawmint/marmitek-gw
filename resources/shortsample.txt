@@ -1,1 +1,0 @@
-11/08 14:32:36 Rx RFSEC Addr: 58:77:00 Func: Contact_alert_min_tamper_DS12A

@@ -1,9 +1,6 @@
-Marmitek Gateway
-================
+Domoticz to Marmitek Gateway
+============================
 
-A Ubigate Plugin, to read data from the X10 sensors and transfers them to Ubismart.
+A Ubigate Plugin, to read data from MQTT topic on the same host provided by Domoticz and transfer them to Ubismart in the same format as Marmitek.
 
-It can manage:
-
-* MS13 (motion sensor)
-* DS90/DS18 (door sensor)
+It handles Z-Wave sensors: MultiSensor 6 (particularly Motion sensor), Contact sensor
