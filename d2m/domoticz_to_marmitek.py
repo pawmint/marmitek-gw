@@ -96,8 +96,7 @@ def on_message(client, userdata, msg):
         logger.info("D2M: Exception: " + str(e) + "   " + str(details) + "  " + sensor) 
     else:
         logger.info('D2M: Nothing To Show')
-    client.disconnect()
-        
+
 
 # No more used -- this is done in sensor_plugin.py
 def push_event(client, msg, sensor, value):
