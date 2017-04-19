@@ -23,4 +23,4 @@ class Domoticz_as_Marmitek(SensorPlugin):
         except Exception as e:
             logger.error("D2M get_details_deprecated" + str(e))
             logger.debug("Unknown sensor \"%s\"" % sensor)
-            return None
+            return {'house': None, 'binding': None, 'bindingType': None}
