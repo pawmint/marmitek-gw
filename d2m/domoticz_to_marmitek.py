@@ -86,7 +86,7 @@ def on_message(client, userdata, msg):
             
 
     except KeyError:
-        continue
+        pass
     except Exception as e:
         logger.info("D2M: Exception: " + str(e) + "   " + str(details) + "  " + sensor) 
    
