@@ -58,19 +58,22 @@ def on_message(client, userdata, msg):
     date = tz.localize(datetime.now()).isoformat()
     try: 
         logger.debug("Z-wave received some data:" + str(data))
-        if any([data['switchType'] == "Contact", data['switchType'] == "Motion Sensor"]):
+        if any([data['switchType'] == "On/Off", data['switchType'] == "Motion Sensor"]):
             sensor = data['name']
             details = client.plugin.get_details_deprecated(sensor)
-            if data['switchType']== "Contact":
-                if data['nvalue'] == 1:
+            if 'Contact' in data['name']:
+                if data['nvalue'] == 0:
                     value = "alert"
                 else:
-                    value = "normal"            
-            if data['switchType']== "Motion Sensor":    
+                    value = "normal"
+            if 'Motion' in data['name']:
                 if data['nvalue'] == 1:
                     value = "on"
-                else: 
+                else:
                     value = "off"
+            #print(data)
+            #push_event(client, data, sensor, value)
+                    
             #print(data)
             #push_event(client, data, sensor, value)
             myMAC = open('/sys/class/net/eth0/address').read().rstrip()
