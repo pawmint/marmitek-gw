@@ -62,7 +62,7 @@ def on_message(client, userdata, msg):
             sensor = data['name']
             details = client.plugin.get_details_deprecated(sensor)
             if 'Contact' in data['name']:
-                if data['nvalue'] == 0:
+                if data['nvalue'] == 1:
                     value = "alert"
                 else:
                     value = "normal"
