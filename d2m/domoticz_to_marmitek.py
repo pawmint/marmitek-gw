@@ -55,8 +55,8 @@ def on_message(client, userdata, msg):
     tz = pytz.timezone(str(get_localzone()))
     date = tz.localize(datetime.now()).isoformat()
     try: 
-        logger.debug("Z-wave received some data:" + str(data))
         if any(['Contact' in data['name'], 'Motion' in data['name']]):
+            logger.debug("Z-wave received some data:" + str(data))
             sensor = data['name']
             details = client.plugin.get_details_deprecated(sensor)
             if 'Contact' in data['name']:
