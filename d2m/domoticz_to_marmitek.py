@@ -52,8 +52,6 @@ def on_message(client, userdata, msg):
     value = None
     data=msg.payload.decode()
     data= json.loads(data)
-    #if data['dtype'] == "Light/Switch":
-
     tz = pytz.timezone(str(get_localzone()))
     date = tz.localize(datetime.now()).isoformat()
     try: 
@@ -71,11 +69,6 @@ def on_message(client, userdata, msg):
                     value = "on"
                 else:
                     value = "off"
-            #print(data)
-            #push_event(client, data, sensor, value)
-                    
-            #print(data)
-            #push_event(client, data, sensor, value)
             myMAC = open('/sys/class/net/eth0/address').read().rstrip()
             result = {}
             result['type']= "TruthObservation"
@@ -87,18 +80,17 @@ def on_message(client, userdata, msg):
             result['id'] = '/'.join (['Raspberry_Pi', myMAC, result['procedure'], date])
             logger.info("never shown")
     
-            #topic = "house/%s/marmitek/sensor/%s" % (house, sensor) # We have it
-            #publish.single(topic, measurement, hostname=credentials['server'],port=credentials['port'])
+          
             client.plugin.push_event(sensor, value, date, result['id'], result['type'], result['observedProperty'], result['procedure'], result['featureOfInterest'], result['uom'])
-            ####client.ubigate.push(topic, measurement)
+     
             
 
     except KeyError:
-        logger.info('D2M: Values from others sensors')
+        continue
     except Exception as e:
         logger.info("D2M: Exception: " + str(e) + "   " + str(details) + "  " + sensor) 
     else:
-        logger.info('D2M: Nothing To Show')
+        continue
 
 
 # No more used -- this is done in sensor_plugin.py
@@ -130,12 +122,7 @@ def push_event(client, msg, sensor, value):
             data = {"id": sensor,
                     "state": value,
                     "date": date}
-            ##publish.single(topic, json.dumps(data), hostname=credentials['server'],port=credentials['port'])
             client.ubigate.push(topic, json.dumps(data))
-            #gate.mqtt_buffer.lock.acquire()
-            #mid = gate.push(topic, data, to_buffer=True)
-            #gate.mqtt_buffer.add(mid, topic, data)
-            #gate.mqtt_buffer.lock.release()
         else:
             logger.info('This sensor is blacklisted, message skipped')
     except KeyError:
@@ -151,14 +138,8 @@ def push_event(client, msg, sensor, value):
         measurement['result']= {'value': value}#, 'uom': uom}
 
         topic = "house/%s/marmitek/sensor/%s" % (house, sensor)
-        #publish.single(topic, measurement, hostname=credentials['server'],port=credentials['port'])
         client.ubigate.push(topic, measurement)
 
-        # By using locks, we ensure we won't ever have I/O conflict
-        #self.gate.mqtt_buffer.lock.acquire()
-        #mid = self.gate.push(topic, measurement, to_buffer=True)
-        #self.gate.mqtt_buffer.add(mid, topic, measurement)
-        #self.gate.mqtt_buffer.lock.release()
 
 def main(plugin): 
     run(plugin)
