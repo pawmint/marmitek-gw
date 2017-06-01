@@ -56,7 +56,7 @@ def on_message(client, userdata, msg):
     date = tz.localize(datetime.now()).isoformat()
     try: 
         if any(['Contact' in data['name'], 'Motion' in data['name']]):
-            logger.debug("Z-wave received some data:" + str(data))
+            logger.info("Z-wave received some data:" + str(data))
             sensor = data['name']
             details = client.plugin.get_details_deprecated(sensor)
             if 'Contact' in data['name']:
@@ -78,12 +78,8 @@ def on_message(client, userdata, msg):
             result['uom'] = '' # unit of measurement
             #result['id']= "Raspberry_Pi/%s/Zwave_%s_Room" % (client.ubigate.credentials['id'],sensor)
             result['id'] = '/'.join (['Raspberry_Pi', myMAC, result['procedure'], date])
-            logger.info("never shown")
-    
-          
+
             client.plugin.push_event(sensor, value, date, result['id'], result['type'], result['observedProperty'], result['procedure'], result['featureOfInterest'], result['uom'])
-     
-            
 
     except KeyError:
         pass
