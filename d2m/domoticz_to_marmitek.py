@@ -58,7 +58,7 @@ def on_message(client, userdata, msg):
     date = tz.localize(datetime.now()).isoformat()
     try: 
         logger.debug("Z-wave received some data:" + str(data))
-        if any([data['switchType'] == "On/Off", data['switchType'] == "Motion Sensor"]):
+        if any(['Contact' in data['name'], 'Motion' in data['name']]):
             sensor = data['name']
             details = client.plugin.get_details_deprecated(sensor)
             if 'Contact' in data['name']:
