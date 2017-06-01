@@ -89,8 +89,7 @@ def on_message(client, userdata, msg):
         continue
     except Exception as e:
         logger.info("D2M: Exception: " + str(e) + "   " + str(details) + "  " + sensor) 
-    else:
-        continue
+   
 
 
 # No more used -- this is done in sensor_plugin.py
