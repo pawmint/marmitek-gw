@@ -6,6 +6,7 @@
 # MQTT broker
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
+import time
 
 # Needed?
 from datetime import datetime
@@ -41,6 +42,8 @@ def run(plugin):
             logger.info("MQTT client for Domoticz sucessfully initialised")
         except Exception as e:
             logger.error('MQTT client for Domoticz Error: ' + str(e))
+            # Wait some time before re-trying
+            time.sleep(5)
     else:
         print('Gateway not linked to UbiSmart')
  
