@@ -52,12 +52,68 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("domoticz/out")
 
 def on_message(client, userdata, msg):
+    def push_signal(sensor, values, date):#, id, type, observedProperty, procedure, featureOfInterest, uom):
+        """Push a sensor event to Ubismart through MQTT.
+        If the sensor is known, we send it to house/<ID>/<plugin>/sensor/<ID>.
+        If the sensor is unknown, we send it to gateway/<ID>/sensor/register.
+        If the sensor known and blacklisted, we skip it.
+        """
+        logger.info("Sending event '%s' at time '%s' for sensor '%s'" %
+                    (value, date, sensor))
+        try:
+            # List comprehensions are cool!
+            house = [house['id']
+                     for house in client.plugin.gate.config['houses']
+                     for s in house['sensors']
+                     if s['id'] == sensor][0]
+        except IndexError:
+            # If the sensor isn't in the config
+            if('blacklist' not in client.plugin.gate.config or
+               sensor not in client.plugin.gate.config['blacklist']):
+                logger.info("Unknown sensor, notifying to Ubismart")
+                # If it's not blacklisted
+                topic = ("gateway/%s/sensor/register"
+                         % client.plugin.gate.credentials['id'])
+                data = {"sensor": sensor,
+                        "id": sensor,
+                        "state": "signal",
+                        "date": date,
+                        "format": "temphum"}
+                client.plugin.gate.mqtt_buffer.lock.acquire()
+                mid = client.plugin.gate.push(topic, data, to_buffer=True)
+                client.plugin.gate.mqtt_buffer.add(mid, topic, data)
+                client.plugin.gate.mqtt_buffer.lock.release()
+            else:
+                logger.info('This sensor is blacklisted, message skipped')
+        except KeyError:
+            logger.error("Can't send sensor event, missing config")
+        else:
+            signal = {}
+            signal['sensor'] = sensor
+            signal['house'] = house
+            signal['values'] = values
+            signal['date'] = date
+            signal['format'] = 'temphum'
+            topic = "signal"
+            # By using locks, we ensure we won't ever have I/O conflict
+            client.plugin.gate.mqtt_buffer.lock.acquire()
+            mid = client.plugin.gate.push(topic, signal, to_buffer=True)
+            client.plugin.gate.mqtt_buffer.add(mid, topic, signal)
+            client.plugin.gate.mqtt_buffer.lock.release()
+
+
     value = None
     data=msg.payload.decode()
     data= json.loads(data)
     tz = pytz.timezone(str(get_localzone()))
     date = tz.localize(datetime.now()).isoformat()
     try: 
+        if u'Temp + Humidity' in data['dtype']:
+            logger.info("Z-wave received temp/hum data:" + str(data))
+            sensor = data['name']
+            values = {'temperature': data['svalue1'], 'humidity': data['svalue2']}
+            push_signal(sensor, values, date)
+
         if any(['Contact' in data['name'], 'Motion' in data['name']]):
             logger.info("Z-wave received some data:" + str(data))
             sensor = data['name']
@@ -87,12 +143,16 @@ def on_message(client, userdata, msg):
     except KeyError:
         pass
     except Exception as e:
+        try: details
+        except NameError: details = str(values)
+        try: sensor
+        except NameError: sensor = "unknown sensor"
         logger.info("D2M: Exception: " + str(e) + "   " + str(details) + "  " + sensor) 
    
 
 
 # No more used -- this is done in sensor_plugin.py
-def push_event(client, msg, sensor, value):
+def push_eventx(client, msg, sensor, value):
     """Push a sensor event to Ubismart through MQTT.
     If the sensor is known, we send it to house/<ID>/<plugin>/sensor/<ID>.
     If the sensor is unknown, we send it to gateway/<ID>/sensor/register.
